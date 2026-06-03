@@ -124,7 +124,9 @@ public class PlayerMovement : MonoBehaviour
 
 
         //Run
-        else if (Mathf.Abs(dir.x) > Mathf.Epsilon)
+        else if (
+            Mathf.Abs(dir.x) > Mathf.Epsilon ||     // Horizontal
+            Mathf.Abs(dir.y) > Mathf.Epsilon)       // Vertical
         {
             // Reset timer
             m_delayToIdle = 0.05f;
