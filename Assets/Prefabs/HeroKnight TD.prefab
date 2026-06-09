@@ -89,6 +89,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8413529789942519730}
+  - component: {fileID: 779749202391492040}
   - component: {fileID: -2000552553439753116}
   - component: {fileID: 2655505060201611074}
   - component: {fileID: 2954181336601895002}
@@ -121,6 +122,21 @@ Transform:
   - {fileID: 3233824457707053878}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &779749202391492040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6323719953710832613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88d28b9efc88da74697dd15c3e909221, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_maxHealth: 100
+  m_currentHealth: 100
+  m_healthGfx: {fileID: 0}
 --- !u!114 &-2000552553439753116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -133,7 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e0ca32288d6ecc4ea59de7374bfdb1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 4
+  m_speed: 4
   m_rollForce: 6
   m_noBlood: 0
   m_slideDust: {fileID: 1038168246061390451, guid: 8b8c8cc6774fb074cb9139cc631b108e,

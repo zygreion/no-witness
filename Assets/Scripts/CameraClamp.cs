@@ -15,12 +15,8 @@ public class CameraClamp : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && cameraFollow2 != null)
         {
-            Debug.Log(gameObject.name + " - " + other.gameObject.name + " collided!");
-
-            if (cameraFollow2 == null) return;
-
             if (minX != 0) cameraFollow2.minX = minX;
             if (maxX != 0) cameraFollow2.maxX = maxX;
             if (minY != 0) cameraFollow2.minY = minY;
@@ -30,10 +26,8 @@ public class CameraClamp : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && cameraFollow2 != null)
         {
-            if (cameraFollow2 == null) return;
-
             if (minX != 0) cameraFollow2.minX = Mathf.NegativeInfinity;
             if (maxX != 0) cameraFollow2.maxX = Mathf.Infinity;
             if (minY != 0) cameraFollow2.minY = Mathf.NegativeInfinity;
