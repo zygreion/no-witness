@@ -48,12 +48,40 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
+    {
+        if (scene.name == "Main-Menu")
+        {
+            if (m_menuBGM != null)
+            {
+                PlayMusic(m_menuBGM);
+            }
+        }
+        else
+        {
+            StopMusic();
+        }
+    }
+
     private void Start()
     {
-        // Automatically start playing menu BGM if assigned
-        if (m_menuBGM != null)
+        // Play BGM if we start the game directly in the Main Menu scene
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Main-Menu")
         {
-            PlayMusic(m_menuBGM);
+            if (m_menuBGM != null)
+            {
+                PlayMusic(m_menuBGM);
+            }
         }
     }
 

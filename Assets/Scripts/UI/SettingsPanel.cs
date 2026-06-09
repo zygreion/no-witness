@@ -84,15 +84,29 @@ public class SettingsPanel : MonoBehaviour
 
     private void OnMusicVolumeChanged(float value)
     {
-        PlayerPrefs.SetFloat(k_musicVolumeKey, value);
-        PlayerPrefs.Save();
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.SetMusicVolume(value);
+        }
+        else
+        {
+            PlayerPrefs.SetFloat(k_musicVolumeKey, value);
+            PlayerPrefs.Save();
+        }
         Debug.Log($"Music Volume: {value:F2}");
     }
 
     private void OnSFXVolumeChanged(float value)
     {
-        PlayerPrefs.SetFloat(k_sfxVolumeKey, value);
-        PlayerPrefs.Save();
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.SetSFXVolume(value);
+        }
+        else
+        {
+            PlayerPrefs.SetFloat(k_sfxVolumeKey, value);
+            PlayerPrefs.Save();
+        }
         Debug.Log($"SFX Volume: {value:F2}");
     }
 }
