@@ -18,8 +18,8 @@ public class SettingsPanel : MonoBehaviour
 
     private void OnEnable()
     {
-        // Default: Show main settings menu, hide sub-panels
-        ShowMainSettingsMenu();
+        // Default: Show main settings menu, hide sub-panels (do not play click sound on enable)
+        ShowMainSettingsMenu(false);
 
         // Load saved values (default to 1.0 if no save exists)
         if (m_musicSlider != null)
@@ -53,6 +53,12 @@ public class SettingsPanel : MonoBehaviour
 
     public void ShowMainSettingsMenu()
     {
+        ShowMainSettingsMenu(true);
+    }
+
+    public void ShowMainSettingsMenu(bool playSound)
+    {
+        if (playSound && AudioManager.Instance != null) AudioManager.Instance.PlayClickSound();
         if (m_mainSettingsMenu != null) m_mainSettingsMenu.SetActive(true);
         if (m_audioPanel != null) m_audioPanel.SetActive(false);
         if (m_inputsPanel != null) m_inputsPanel.SetActive(false);
@@ -60,6 +66,7 @@ public class SettingsPanel : MonoBehaviour
 
     public void OpenAudioPanel()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayClickSound();
         if (m_mainSettingsMenu != null) m_mainSettingsMenu.SetActive(false);
         if (m_audioPanel != null) m_audioPanel.SetActive(true);
         if (m_inputsPanel != null) m_inputsPanel.SetActive(false);
@@ -67,6 +74,7 @@ public class SettingsPanel : MonoBehaviour
 
     public void OpenInputsPanel()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayClickSound();
         if (m_mainSettingsMenu != null) m_mainSettingsMenu.SetActive(false);
         if (m_audioPanel != null) m_audioPanel.SetActive(false);
         if (m_inputsPanel != null) m_inputsPanel.SetActive(true);

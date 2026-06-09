@@ -47,6 +47,7 @@ public class PauseManager : MonoBehaviour
 
     public void PauseGame()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayClickSound();
         m_isPaused = true;
         m_pauseMenuPanel.SetActive(true);
         if (m_settingsPanel != null)
@@ -62,6 +63,7 @@ public class PauseManager : MonoBehaviour
 
     public void ResumeGame()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayClickSound();
         m_isPaused = false;
         m_pauseMenuPanel.SetActive(false);
         if (m_settingsPanel != null)
@@ -77,6 +79,7 @@ public class PauseManager : MonoBehaviour
 
     public void OnSettingsClicked()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayClickSound();
         m_pauseMenuPanel.SetActive(false);
         if (m_settingsPanel != null)
         {
@@ -86,6 +89,7 @@ public class PauseManager : MonoBehaviour
 
     public void OnSettingsBackClicked()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayClickSound();
         if (m_settingsPanel != null)
         {
             m_settingsPanel.SetActive(false);
@@ -95,6 +99,7 @@ public class PauseManager : MonoBehaviour
 
     public void OnBackToMenuClicked()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayClickSound();
         Time.timeScale = 1f; // IMPORTANT: Always restore time scale before changing scenes!
         SceneManager.LoadScene("Main-Menu");
     }
