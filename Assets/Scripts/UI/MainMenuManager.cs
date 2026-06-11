@@ -22,6 +22,7 @@ public class MainMenuManager : MonoBehaviour
     /// </summary>
     public void OnNewGameClicked()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayClickSound();
         SceneManager.LoadScene(m_gameplaySceneName);
     }
 
@@ -30,6 +31,7 @@ public class MainMenuManager : MonoBehaviour
     /// </summary>
     public void OnContinueClicked()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayClickSound();
         Debug.Log("Continue: Save/Load system not yet implemented.");
     }
 
@@ -38,6 +40,7 @@ public class MainMenuManager : MonoBehaviour
     /// </summary>
     public void OnSettingsClicked()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayClickSound();
         m_mainMenuPanel.SetActive(false);
         m_settingsPanel.SetActive(true);
     }
@@ -47,6 +50,7 @@ public class MainMenuManager : MonoBehaviour
     /// </summary>
     public void OnBackToMenuClicked()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayClickSound();
         m_settingsPanel.SetActive(false);
         m_mainMenuPanel.SetActive(true);
     }
@@ -56,6 +60,7 @@ public class MainMenuManager : MonoBehaviour
     /// </summary>
     public void OnExitClicked()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayClickSound();
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
