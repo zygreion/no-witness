@@ -12,9 +12,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool m_noBlood = false;
     [SerializeField] GameObject m_slideDust;
 
+    private float m_localScaleX;
     private Animator m_animator;
     private Rigidbody2D m_body2d;
     private bool m_isRolling = false;
+
+    // Attack
+    [Header("Attack")]
+    [SerializeField] private GameObject m_attackHitbox;
     private int m_currentAttack = 0;
     private float m_timeSinceAttack = 0.0f;
     private float m_delayToIdle = 0.0f;
@@ -33,8 +38,7 @@ public class PlayerController : MonoBehaviour
     private float k_maxWidth;
     private float m_staminaRegenDuration = 1.0f; // Regen every 1.0f second
     private float m_staminaRegenCurrentTime = 0.0f;
-    private bool m_isStaminaRegen = false;
-    private const float k_staminaRegenAmount = 0.5f;
+    private const float k_staminaRegenAmount = 1.0f;
 
     private Dictionary<string, float> actionStamina = new()
     {
@@ -51,6 +55,7 @@ public class PlayerController : MonoBehaviour
     {
         m_animator = GetComponent<Animator>();
         m_body2d = GetComponent<Rigidbody2D>();
+        m_localScaleX = Mathf.Abs(transform.localScale.x);
     }
 
     private void Start()
@@ -67,12 +72,14 @@ public class PlayerController : MonoBehaviour
     {
         // Increase timer that controls attack combo
         m_timeSinceAttack += Time.deltaTime;
+        if (m_timeSinceAttack > 0.25f && m_attackHitbox.activeSelf)
+            m_attackHitbox.SetActive(false);
 
         // Increase timer that checks roll duration
         if (m_isRolling)
             m_rollCurrentTime += Time.deltaTime;
 
-        // Disable rolling if timer extends duration
+        // Disable rolling if timer exceeds duration
         if (m_rollCurrentTime > m_rollDuration)
         {
             m_isRolling = false;
@@ -84,17 +91,18 @@ public class PlayerController : MonoBehaviour
 
         // -- Handle input and movement --
         Vector2 dir = Vector2.zero;
+        Vector3 newScale = transform.localScale;
         if (!m_healthPlayer.IsDead && !m_isRolling)
         {
             if (Input.GetKey(KeyCode.A))
             {
                 dir.x = -1;
-                GetComponent<SpriteRenderer>().flipX = true;
+                newScale.x = m_localScaleX * dir.x;
             }
             else if (Input.GetKey(KeyCode.D))
             {
                 dir.x = 1;
-                GetComponent<SpriteRenderer>().flipX = false;
+                newScale.x = m_localScaleX * dir.x;
             }
 
             if (Input.GetKey(KeyCode.W))
@@ -107,10 +115,15 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        transform.localScale = newScale;
+
         // Move
         dir.Normalize();
         if (!m_isRolling)
-            m_body2d.velocity = m_speed * dir;
+        {
+            float slowdown = m_isBlocking ? 0.5f : 1.0f;
+            m_body2d.velocity = m_speed * slowdown * dir;
+        }
 
         if (!m_healthPlayer.IsDead)
         {
@@ -131,6 +144,7 @@ public class PlayerController : MonoBehaviour
                 if (!TryUseStamina("Attack")) return;
 
                 m_currentAttack++;
+                m_attackHitbox.SetActive(true);
 
                 // Loop back to one after third attack
                 if (m_currentAttack > 3)
@@ -204,16 +218,13 @@ public class PlayerController : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.R))
-        {
             m_healthPlayer.Revive();
-        }
     }
 
     // ----- Stamina -----
     private void TakeStamina(float amount)
     {
         m_currentStamina = Mathf.Clamp(m_currentStamina - amount, 0, m_maxStamina);
-        m_isStaminaRegen = true;
         UpdateStaminaGfx();
     }
 
@@ -232,7 +243,7 @@ public class PlayerController : MonoBehaviour
     private void RegenStamina()
     {
         // Cannot regen while block still
-        if (!m_isStaminaRegen || m_isBlocking) return;
+        if (m_isBlocking) return;
 
         // Add timer
         m_staminaRegenCurrentTime += Time.deltaTime;
@@ -242,10 +253,6 @@ public class PlayerController : MonoBehaviour
         {
             m_currentStamina = Mathf.Clamp(m_currentStamina + k_staminaRegenAmount, 0, m_maxStamina);
             m_staminaRegenCurrentTime = 0.0f;
-
-            // Disable stamina regen
-            if (m_currentStamina >= m_maxStamina)
-                m_isStaminaRegen = false;
 
             UpdateStaminaGfx();
         }

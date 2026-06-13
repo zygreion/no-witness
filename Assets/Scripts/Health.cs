@@ -20,6 +20,10 @@ public class Health : MonoBehaviour
     public virtual void TakeDamage(float dmgAmount)
     {
         m_currentHealth = Mathf.Clamp(m_currentHealth - dmgAmount, 0, m_maxHealth);
+
+        // Delete from scene
+        if (gameObject.tag != "Player" && m_currentHealth <= 0)
+            Destroy(gameObject);
     }
 
     public virtual void Revive()
