@@ -6,7 +6,9 @@ using UnityEngine.UI;
 
 public class Health : MonoBehaviour
 {
-    [SerializeField] protected float m_maxHealth, m_currentHealth = 100.0f;
+    [Header("Base")]
+    [SerializeField] protected float m_maxHealth = 100.0f;
+    [SerializeField] protected float m_currentHealth = 100.0f;
     protected Animator m_animator;
     public bool IsDead { get; protected set; } = false;
 

@@ -5,18 +5,25 @@ using UnityEngine.UI;
 
 public class HealthPlayer : Health
 {
+    [Header("Player")]
     [SerializeField] private RawImage m_healthGfx;
-    private const float k_maxWidth = 200.0f;
+    private RectTransform m_healthGfxTransform;
+    private float k_maxWidth;
+
+    private void Start()
+    {
+        if (m_healthGfx == null) return;
+
+        m_healthGfxTransform = m_healthGfx.GetComponent<RectTransform>();
+        k_maxWidth = ((RectTransform)m_healthGfx.transform.parent).rect.width;
+    }
 
     private void UpdateHealthGfx()
     {
         if (m_healthGfx == null) return;
 
-        RectTransform rectTransform = m_healthGfx.GetComponent<RectTransform>();
         float newWidth = m_currentHealth / m_maxHealth * k_maxWidth;
-
-        rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, newWidth);
-        Debug.Log($"{gameObject.name}'s health: {m_currentHealth / m_maxHealth * 100:F0}%");
+        m_healthGfxTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, newWidth);
     }
 
     public override void TakeDamage(float dmgAmount)
