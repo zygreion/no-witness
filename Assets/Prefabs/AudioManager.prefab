@@ -50,6 +50,8 @@ MonoBehaviour:
   m_sfxSource: {fileID: 3023478228395289604}
   m_defaultClickSound: {fileID: 8300000, guid: ef96bced5165d6b4682342da0e2d0d4a, type: 3}
   m_menuBGM: {fileID: 8300000, guid: 072b957ca6d4e8f4cb6add4a936ac922, type: 3}
+  m_dungeon1BGM: {fileID: 8300000, guid: c83a9ae0b933c004382fa470bdda8e9d, type: 3}
+  m_dungeon2BGM: {fileID: 8300000, guid: a1080cec1c5a8f24f944a42a682c378c, type: 3}
 --- !u!82 &3385444516976567078
 AudioSource:
   m_ObjectHideFlags: 0
