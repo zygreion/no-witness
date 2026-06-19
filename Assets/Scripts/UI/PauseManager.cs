@@ -10,6 +10,9 @@ public class PauseManager : MonoBehaviour
 
     private bool m_isPaused = false;
 
+    // Public getter to allow DeathPanelManager to hide the pause button dynamically
+    public GameObject PauseButton => m_pauseButton;
+
     private void Start()
     {
         // Ensure panels are in correct states on start

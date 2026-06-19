@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,8 @@ public class HealthPlayer : Health
     private RectTransform m_healthGfxTransform;
     private float k_maxWidth;
     private PlayerController m_playerController;
+
+    public static event Action OnPlayerDeath;
 
     private void Start()
     {
@@ -57,6 +60,7 @@ public class HealthPlayer : Health
         {
             IsDead = true;
             m_animator.SetTrigger("Death");
+            OnPlayerDeath?.Invoke();
         }
 
         UpdateHealthGfx();

@@ -68,6 +68,7 @@ public class AudioManager : MonoBehaviour
                 PlayMusic(m_menuBGM);
                 break;
             case "Dungeon 1":
+            case "CombatTest":
                 PlayMusic(m_dungeon1BGM);
                 break;
             case "Dungeon 2":
@@ -88,6 +89,7 @@ public class AudioManager : MonoBehaviour
                 PlayMusic(m_menuBGM);
                 break;
             case "Dungeon 1":
+            case "CombatTest":
                 PlayMusic(m_dungeon1BGM);
                 break;
             case "Dungeon 2":
