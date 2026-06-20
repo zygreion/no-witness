@@ -10,7 +10,9 @@ public class AudioManager : MonoBehaviour
 
     [Header("Default Audio Clips")]
     [SerializeField] private AudioClip m_defaultClickSound;
-    [SerializeField] private AudioClip m_menuBGM; // Default music for Main Menu / Pause Menu
+    [SerializeField] private AudioClip m_menuBGM;     // Music for Main Menu
+    [SerializeField] private AudioClip m_dungeon1BGM; // Music for Dungeon 1
+    [SerializeField] private AudioClip m_dungeon2BGM; // Music for Dungeon 2
 
     private const string k_musicVolumeKey = "MusicVolume";
     private const string k_sfxVolumeKey = "SFXVolume";
@@ -60,28 +62,39 @@ public class AudioManager : MonoBehaviour
 
     private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
     {
-        if (scene.name == "Main-Menu")
+        switch (scene.name)
         {
-            if (m_menuBGM != null)
-            {
+            case "Main-Menu":
                 PlayMusic(m_menuBGM);
-            }
-        }
-        else
-        {
-            StopMusic();
+                break;
+            case "Dungeon 1":
+            case "CombatTest":
+                PlayMusic(m_dungeon1BGM);
+                break;
+            case "Dungeon 2":
+                PlayMusic(m_dungeon2BGM);
+                break;
+            default:
+                StopMusic();
+                break;
         }
     }
 
     private void Start()
     {
-        // Play BGM if we start the game directly in the Main Menu scene
-        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Main-Menu")
+        // Play correct BGM if game starts directly in one of these scenes
+        switch (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name)
         {
-            if (m_menuBGM != null)
-            {
+            case "Main-Menu":
                 PlayMusic(m_menuBGM);
-            }
+                break;
+            case "Dungeon 1":
+            case "CombatTest":
+                PlayMusic(m_dungeon1BGM);
+                break;
+            case "Dungeon 2":
+                PlayMusic(m_dungeon2BGM);
+                break;
         }
     }
 

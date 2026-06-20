@@ -12,6 +12,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool m_noBlood = false;
     [SerializeField] GameObject m_slideDust;
 
+    [Header("Combat Settings")]
+    [SerializeField] private Transform m_attackPoint;
+    [SerializeField] private float m_attackRange = 1.2f;
+    [SerializeField] private float m_attackDamage = 25.0f;
+    [SerializeField] private LayerMask m_enemyLayers;
+
+    // Public properties for external access
+    public bool IsRolling => m_isRolling;
+    public bool IsBlocking => m_isBlocking;
+
     private Animator m_animator;
     private Rigidbody2D m_body2d;
     private bool m_isRolling = false;
@@ -143,6 +153,9 @@ public class PlayerController : MonoBehaviour
                 // Call one of three attack animations "Attack1", "Attack2", "Attack3"
                 m_animator.SetTrigger("Attack" + m_currentAttack);
 
+                // Perform combat hit detection
+                PerformAttackDetection();
+
                 // Reset timer
                 m_timeSinceAttack = 0.0f;
             }
@@ -257,5 +270,56 @@ public class PlayerController : MonoBehaviour
 
         float newWidth = m_currentStamina / m_maxStamina * k_maxWidth;
         m_staminaGfxTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, newWidth);
+    }
+
+    private void PerformAttackDetection()
+    {
+        if (m_attackPoint == null) return;
+
+        // Calculate attack position based on player facing direction (flipX)
+        Vector3 attackPos = m_attackPoint.position;
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        if (sr != null && sr.flipX)
+        {
+            // Mirror the local X offset if facing left
+            Vector3 localOffset = m_attackPoint.localPosition;
+            attackPos = transform.TransformPoint(new Vector3(-localOffset.x, localOffset.y, localOffset.z));
+        }
+
+        // Detect all enemies in range of attack point
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPos, m_attackRange, m_enemyLayers);
+        Debug.Log("Attacking! Detected " + hitEnemies.Length + " colliders in range.");
+
+        // Keep track of already damaged targets to prevent double damage
+        HashSet<Health> damagedTargets = new HashSet<Health>();
+
+        // Damage each enemy
+        foreach (Collider2D enemy in hitEnemies)
+        {
+            if (enemy.TryGetComponent<Health>(out var enemyHealth))
+            {
+                if (!damagedTargets.Contains(enemyHealth))
+                {
+                    enemyHealth.TakeDamage(m_attackDamage);
+                    damagedTargets.Add(enemyHealth);
+                }
+            }
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (m_attackPoint == null) return;
+
+        Vector3 attackPos = m_attackPoint.position;
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        if (sr != null && sr.flipX)
+        {
+            Vector3 localOffset = m_attackPoint.localPosition;
+            attackPos = transform.TransformPoint(new Vector3(-localOffset.x, localOffset.y, localOffset.z));
+        }
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(attackPos, m_attackRange);
     }
 }
