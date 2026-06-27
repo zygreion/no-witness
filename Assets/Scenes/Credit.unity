@@ -497,125 +497,67 @@ MonoBehaviour:
       m_Calls: []
   m_text: '
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
+
+
 
     I
     Wayan Rangga Pinastawa, M.Kom'
@@ -756,127 +698,76 @@ MonoBehaviour:
 
     Credits
 
-    
 
-    
 
     BelumAdaStudio Members
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    Player
-    Features
+    Player Features
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
+
 
     Enemies
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
+
 
     Level
     & World Design
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    User
-    Interface
+    User Interface
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
     Audio
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
     Special
     Thanks To
 
-    
+
 
 '
   m_isRightToLeft: 0
@@ -1015,73 +906,58 @@ MonoBehaviour:
   m_text: '
 
 
-    
 
-    
 
-    
 
-    
 
     Samuel Anthony Nugroho
 
-    Muhammad
-    Hunaify Mu''izzy
+    Muhammad Hunaify Mu''izzy
 
-    M. Ammar Allezandro Djosan
+    M.
+    Ammar Allezandro Djosan
 
     Laseno Octafiian Ramdhani
 
-    Aqiel
-    Syafiq Rahman
+    Aqiel Syafiq Rahman
 
-    
 
-    
 
-    
 
-    
 
-    Health Bar
+    Health
+    Bar
 
     Stamina Bar
 
     Movement
 
-    Camera
-    Follow
+    Camera Follow
 
     Combat
 
-    Item Collection
+
+    Item
+    Collection
 
     Buff Card
 
-    
 
-    
 
-    
 
-    
 
     Creeps
 
-    Elite
-    Monster
+    Elite Monster
 
     Final Boss
 
     Combat
 
-    
 
-    
 
-    
 
-    
+
 
     Prologue
 
@@ -1094,52 +970,43 @@ MonoBehaviour:
 
     Final Dungeon
 
-    
 
-    
 
-    
 
-    
 
     Main Menu
 
-    Settings
-    Menu
+    Settings Menu
 
-    Audio Settings Menu
+    Audio
+    Settings Menu
 
     Inputs Menu
 
     Dialogue Overlay
 
-    Dead
+    Dead Overlay
+
+    Pause
     Overlay
 
-    Pause Overlay
 
-    
 
-    
 
-    
-
-    
 
     Background Music
 
-    Combat
-    Sound
+    Combat Sound
 
     Interface Sound
 
-    
 
-    
 
-    
 
-    
+
+
+
+
 
 '
   m_isRightToLeft: 0
@@ -1362,9 +1229,132 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\r\n\r\n\r\n\r\n\r\n\n2310511058\r\n2310511062\r\n2310511128\r\n2310511131\r\n2310511139\r\n\r\n\r\n\r\n\r\nMuiz\r\nMuiz\r\nMuiz\r\nMuiz\r\nMuiz
-    \xB7 Allezandro\r\nLaseno\r\nLaseno\r\n\r\n\r\n\r\n\r\nSamuel\r\nSamuel\r\nSamuel\r\nSamuel
-    \xB7 Allezandro\r\n\r\n\r\n\r\n\r\nSamuel\r\nAqiel\r\nAqiel\r\nAqiel\r\nAqiel\r\n\r\n\r\n\r\n\r\nAllezandro\r\nAllezandro\r\nAllezandro\r\nAllezandro\r\nAllezandro\r\nAllezandro\r\nAllezandro\r\n\r\n\r\n\r\n\r\nAllezandro\r\nAllezandro\r\nAllezandro\r\n\r\n\r\n\r\n\r\n"
+  m_text: '
+
+    
+
+    
+
+    
+
+    
+
+
+    2310511058
+
+    2310511062
+
+    2310511128
+
+    2310511131
+
+    2310511139
+
+    
+
+    
+
+    
+
+    
+
+    Muiz
+
+    Muiz
+
+    Muiz
+
+    Muiz
+
+    Muiz
+
+    Allezandro
+
+    Laseno
+
+    Laseno
+
+    
+
+    
+
+    
+
+    
+
+    Samuel
+
+    Samuel
+
+    Samuel
+
+    Samuel
+
+    Allezandro
+
+    
+
+    
+
+    
+
+    
+
+    Samuel
+
+    Aqiel
+
+    Aqiel
+
+    Aqiel
+
+    Aqiel
+
+    
+
+    
+
+    
+
+    
+
+    Allezandro
+
+    Allezandro
+
+    Allezandro
+
+    Allezandro
+
+    Allezandro
+
+    Allezandro
+
+    Allezandro
+
+    
+
+    
+
+    
+
+    
+
+    Allezandro
+
+    Allezandro
+
+    Allezandro
+
+    
+
+    
+
+    
+
+    
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
