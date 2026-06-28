@@ -8,16 +8,13 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private GameObject m_settingsPanel;
 
     [Header("Scene Settings")]
-    [SerializeField] private string m_gameplaySceneName = "CombatTest";
+    [SerializeField] private string m_gameplaySceneName = "IntroDialogue";
 
     private void Start()
     {
         // Ensure correct panel state on start
         m_mainMenuPanel.SetActive(true);
         m_settingsPanel.SetActive(false);
-
-        // Force CombatTest scene for testing (overrides Inspector value)
-        m_gameplaySceneName = "CombatTest";
     }
 
     /// <summary>

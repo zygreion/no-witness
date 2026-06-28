@@ -21,6 +21,19 @@ public class PlayerController : MonoBehaviour
     // Public properties for external access
     public bool IsRolling => m_isRolling;
     public bool IsBlocking => m_isBlocking;
+    public static PlayerController Instance { get; private set; }
+    private bool m_isDialogueLocked = false;
+    public bool IsDialogueLocked => m_isDialogueLocked;
+
+    public void LockPlayerControl(bool isLocked)
+    {
+        m_isDialogueLocked = isLocked;
+        if (isLocked)
+        {
+            if (m_body2d != null) m_body2d.velocity = Vector2.zero;
+            if (m_animator != null) m_animator.SetInteger("AnimState", 0);
+        }
+    }
 
     private Animator m_animator;
     private Rigidbody2D m_body2d;
@@ -59,8 +72,17 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
         m_animator = GetComponent<Animator>();
         m_body2d = GetComponent<Rigidbody2D>();
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
+        }
     }
 
     private void Start()
@@ -75,6 +97,13 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (m_isDialogueLocked)
+        {
+            if (m_body2d != null) m_body2d.velocity = Vector2.zero;
+            if (m_animator != null) m_animator.SetInteger("AnimState", 0);
+            return;
+        }
+
         // Increase timer that controls attack combo
         m_timeSinceAttack += Time.deltaTime;
 

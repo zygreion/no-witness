@@ -13,6 +13,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip m_menuBGM;     // Music for Main Menu
     [SerializeField] private AudioClip m_dungeon1BGM; // Music for Dungeon 1
     [SerializeField] private AudioClip m_dungeon2BGM; // Music for Dungeon 2
+    [SerializeField] private AudioClip m_introBGM;     // Music for Intro Dialogue scene
 
     private const string k_musicVolumeKey = "MusicVolume";
     private const string k_sfxVolumeKey = "SFXVolume";
