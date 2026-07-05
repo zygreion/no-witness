@@ -6305,9 +6305,10 @@ MonoBehaviour:
     - speakerName: Alaric
       sentence: '(Mengendap dari belakang, mengacungkan pedang)
 
-        Jangan
-        bergerak! Siapa kau sebenarnya dan apa maumu, atau kubunuh kau di sini!'
-      speakerPortrait: {fileID: 0}
+        Jangan bergerak!
+        Siapa kau sebenarnya dan apa maumu, atau kubunuh kau di sini!'
+      speakerPortrait: {fileID: 21300000, guid: 4793042a1ff829640b004ffb4f9c9311,
+        type: 3}
       backgroundImage: {fileID: 0}
     - speakerName: ???
       sentence: '(Tetap tenang tanpa berbalik arah)
@@ -6315,14 +6316,16 @@ MonoBehaviour:
         Heh... Anak muda, amarahmu
         terlalu berisik. Aku sudah tahu kau mengendap-endap di sana sejak melintasi
         gerbang luar.'
-      speakerPortrait: {fileID: 0}
+      speakerPortrait: {fileID: 21300000, guid: ebea21e07d29b7f41987d6eb60533a29,
+        type: 3}
       backgroundImage: {fileID: 0}
     - speakerName: Alaric
       sentence: '(Terkejut, mempererat genggaman pedang)
 
         Jangan main-main!
         Cepat katakan siapa dirimu!'
-      speakerPortrait: {fileID: 0}
+      speakerPortrait: {fileID: 21300000, guid: 54b8778bd3288494e8cba71b27e18348,
+        type: 3}
       backgroundImage: {fileID: 0}
     - speakerName: Elder Kenji
       sentence: '(Berbalik perlahan)
@@ -6330,28 +6333,49 @@ MonoBehaviour:
         Panggil aku Kenji. Aku tahu apa yang
         kau cari, Alaric. Kebenaran di balik tragedi yang menimpamu... dan siapa
         dalang di balik semua ini.'
-      speakerPortrait: {fileID: 0}
+      speakerPortrait: {fileID: 21300000, guid: b142f96cf71a66a46a007de1b859bd35,
+        type: 3}
       backgroundImage: {fileID: 0}
     - speakerName: Alaric
       sentence: Bagaimana kau bisa tahu namaku?! Dan apa maksudmu dengan 'kebenaran'?
-      speakerPortrait: {fileID: 0}
+      speakerPortrait: {fileID: 21300000, guid: 54b8778bd3288494e8cba71b27e18348,
+        type: 3}
       backgroundImage: {fileID: 0}
     - speakerName: Elder Kenji
       sentence: Jawaban yang kau cari ada di dalam dungeon terdalam. Namun, melihat
         caramu memegang pedang... kau hanya akan mengantarkan nyawamu sia-sia ke
         monster di bawah sana.
-      speakerPortrait: {fileID: 0}
+      speakerPortrait: {fileID: 21300000, guid: ebea21e07d29b7f41987d6eb60533a29,
+        type: 3}
       backgroundImage: {fileID: 0}
     - speakerName: Elder Kenji
-      sentence: Masuklah ke area latihan di depan. Buktikan padaku bahwa kau layak
-        memegang pedang itu. Setelah latihanmu selesai, barulah kita bicara lagi.
-      speakerPortrait: {fileID: 0}
+      sentence: Ikuti aku. Buktikan padaku bahwa kau layak memegang pedang itu. Setelah
+        semuanya selesai, barulah kita bicara lagi.
+      speakerPortrait: {fileID: 21300000, guid: b142f96cf71a66a46a007de1b859bd35,
+        type: 3}
+      backgroundImage: {fileID: 0}
+    - speakerName: Alaric
+      sentence: (Aku rasa aku tak punya pilihan selain mengikuti orang tua ini.)
+      speakerPortrait: {fileID: 21300000, guid: 48b4d8615994cc1499351514d20406d3,
+        type: 3}
       backgroundImage: {fileID: 0}
   m_interactPrompt: {fileID: 850526291}
   m_interactKey: 102
   OnDialogueComplete:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1937696293}
+        m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
+        m_MethodName: LoadScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Tutorial
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!61 &521744476
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7724,6 +7748,12 @@ MonoBehaviour:
         sebaiknya aku memeriksa sekeliling terlebih dahulu untuk memastikan tidak
         ada bahaya tersembunyi.
       speakerPortrait: {fileID: 21300000, guid: 9e487fb84e54da24d83a30fe2f91a7e5,
+        type: 3}
+      backgroundImage: {fileID: 0}
+    - speakerName: Alaric
+      sentence: Tunggu... disana, sepertinya ada seseorang. Aku harus berhati-hati,
+        dia bisa saja berbahaya.
+      speakerPortrait: {fileID: 21300000, guid: 48b4d8615994cc1499351514d20406d3,
         type: 3}
       backgroundImage: {fileID: 0}
   m_interactPrompt: {fileID: 0}
@@ -12412,6 +12442,50 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f681a54372d73d74785b9c9d4ac477e8, type: 3}
+--- !u!1 &1937696292
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1937696294}
+  - component: {fileID: 1937696293}
+  m_Layer: 20
+  m_Name: SceneLoader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1937696293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937696292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5aaa748a11b1254e90c1d48acf1c470, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1937696294
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937696292}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 8.94, y: 6.28, z: 0.012223437}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1938076467
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13482,4 +13556,5 @@ SceneRoots:
   - {fileID: 791814852}
   - {fileID: 1815418358}
   - {fileID: 1853873287}
+  - {fileID: 1937696294}
   - {fileID: 521744479}
