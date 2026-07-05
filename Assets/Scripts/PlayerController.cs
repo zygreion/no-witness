@@ -90,6 +90,28 @@ public class PlayerController : MonoBehaviour
         m_animator.SetBool("Grounded", true);
         m_healthPlayer = GetComponent<HealthPlayer>();
 
+        // Set player sorting order to 5 so they render in front of stairs/props on the same layer
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        if (sr != null)
+        {
+            sr.sortingOrder = 5;
+        }
+
+        // Sync sorting layer with physics layer on start to prevent startup visual glitches on stairs
+        string currentLayerName = LayerMask.LayerToName(gameObject.layer);
+        if (currentLayerName == "Layer 1" || currentLayerName == "Layer 2")
+        {
+            if (sr != null)
+            {
+                sr.sortingLayerName = currentLayerName;
+            }
+            SpriteRenderer[] srs = GetComponentsInChildren<SpriteRenderer>();
+            foreach (SpriteRenderer childSr in srs)
+            {
+                childSr.sortingLayerName = currentLayerName;
+            }
+        }
+
         if (m_staminaGfx == null) return;
         m_staminaGfxTransform = m_staminaGfx.GetComponent<RectTransform>();
         k_maxWidth = ((RectTransform)m_staminaGfx.transform.parent).rect.width;

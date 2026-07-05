@@ -40,14 +40,12 @@ public class DialogueManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
         }
 
         m_sentences = new Queue<DialogueSentence>();
-    }
 
-    private void Start()
-    {
-        // Pastikan panel UI tersembunyi di awal game
+        // Pastikan panel UI tersembunyi di awal game di Awake sebelum Start() memicu dialog
         if (m_dialoguePanel != null)
             m_dialoguePanel.SetActive(false);
             
@@ -164,9 +162,17 @@ public class DialogueManager : MonoBehaviour
         }
 
         // Update gambar background jika kalimat ini memiliki background kustom
-        if (m_backgroundImage != null && currentSentence.backgroundImage != null)
+        if (m_backgroundImage != null)
         {
-            m_backgroundImage.sprite = currentSentence.backgroundImage;
+            if (currentSentence.backgroundImage != null)
+            {
+                m_backgroundImage.gameObject.SetActive(true);
+                m_backgroundImage.sprite = currentSentence.backgroundImage;
+            }
+            else
+            {
+                m_backgroundImage.gameObject.SetActive(false);
+            }
         }
 
         m_currentSentenceText = currentSentence.sentence;
