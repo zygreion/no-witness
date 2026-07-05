@@ -6,7 +6,8 @@ public class DialogueTrigger : MonoBehaviour
     public enum TriggerType
     {
         Interact,      // Membutuhkan player mendekat dan menekan tombol untuk berbicara
-        AutoStart      // Berjalan otomatis segera setelah scene dimuat
+        AutoStart,     // Berjalan otomatis segera setelah scene dimuat
+        TriggerOnEnter // Berjalan otomatis saat player menyentuh/masuk ke area trigger collider
     }
 
     [Header("Trigger Mode")]
@@ -61,7 +62,7 @@ public class DialogueTrigger : MonoBehaviour
     /// </summary>
     public void TriggerDialogue()
     {
-        if (m_triggerType == TriggerType.AutoStart && m_hasAutoTriggered) return;
+        if ((m_triggerType == TriggerType.AutoStart || m_triggerType == TriggerType.TriggerOnEnter) && m_hasAutoTriggered) return;
         m_hasAutoTriggered = true;
 
         if (DialogueManager.Instance != null)
@@ -86,12 +87,19 @@ public class DialogueTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (m_triggerType == TriggerType.Interact && other.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
-            m_isPlayerInRange = true;
-            if (m_interactPrompt != null && (DialogueManager.Instance == null || !DialogueManager.Instance.IsDialogueActive))
+            if (m_triggerType == TriggerType.Interact)
             {
-                m_interactPrompt.SetActive(true);
+                m_isPlayerInRange = true;
+                if (m_interactPrompt != null && (DialogueManager.Instance == null || !DialogueManager.Instance.IsDialogueActive))
+                {
+                    m_interactPrompt.SetActive(true);
+                }
+            }
+            else if (m_triggerType == TriggerType.TriggerOnEnter)
+            {
+                TriggerDialogue();
             }
         }
     }
@@ -108,3 +116,4 @@ public class DialogueTrigger : MonoBehaviour
         }
     }
 }
+
