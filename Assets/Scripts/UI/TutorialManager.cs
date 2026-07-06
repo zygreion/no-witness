@@ -48,11 +48,8 @@ public class TutorialManager : MonoBehaviour
             }
         }
 
-        // 3. Matikan portal keluar di awal
-        if (m_exitPortal != null)
-        {
-            m_exitPortal.SetActive(false);
-        }
+        // 3. Matikan portal keluar di awal (hanya mematikan trigger/collider agar visual tangga tetap kelihatan)
+        SetExitPortalActive(false);
 
         // 4. Daftarkan event callback untuk setiap dialog trigger
         if (m_introDialogueTrigger != null)
@@ -177,10 +174,7 @@ public class TutorialManager : MonoBehaviour
             m_currentPhase = TutorialPhase.PortalActive;
 
             // Aktifkan portal / pintu keluar
-            if (m_exitPortal != null)
-            {
-                m_exitPortal.SetActive(true);
-            }
+            SetExitPortalActive(true);
             Debug.Log("[TutorialManager] Outro Dialogue selesai. Portal keluar diaktifkan!");
         }
     }
@@ -235,6 +229,27 @@ public class TutorialManager : MonoBehaviour
             {
                 rb.bodyType = RigidbodyType2D.Dynamic;
             }
+        }
+    }
+
+    private void SetExitPortalActive(bool active)
+    {
+        if (m_exitPortal == null) return;
+
+        // Coba matikan/aktifkan collider agar tangga tetap kelihatan tapi tidak bisa dilewati
+        if (m_exitPortal.TryGetComponent<Collider2D>(out var col))
+        {
+            col.enabled = active;
+        }
+        // Jika tidak ada collider, coba matikan script transisinya
+        else if (m_exitPortal.TryGetComponent<SceneTransitionTrigger>(out var trans))
+        {
+            trans.enabled = active;
+        }
+        // Jika keduanya tidak ada, fallback matikan seluruh GameObject
+        else
+        {
+            m_exitPortal.SetActive(active);
         }
     }
 }

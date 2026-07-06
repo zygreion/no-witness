@@ -13,12 +13,33 @@ public class BuffSelectionManager : MonoBehaviour
     [Header("Panel Buff (untuk disembunyikan setelah pilih)")]
     public GameObject buffPanel;
 
+    [Header("Settings")]
+    [SerializeField] private bool m_autoStart = true;
+
+    [Header("Events")]
+    public UnityEngine.Events.UnityEvent OnBuffSelectionComplete;
+
     private List<BuffCardUI> spawnedCards = new List<BuffCardUI>();
     private BuffData selectedBuff;
 
     void Start()
     {
-        // Panel sudah aktif saat scene dimulai
+        if (m_autoStart)
+        {
+            OpenBuffSelection();
+        }
+        else
+        {
+            if (buffPanel != null)
+                buffPanel.SetActive(false);
+        }
+    }
+
+    public void OpenBuffSelection()
+    {
+        if (buffPanel != null)
+            buffPanel.SetActive(true);
+
         // Game di-pause sampai buff dipilih
         Time.timeScale = 0f;
         SpawnCards();
@@ -26,6 +47,13 @@ public class BuffSelectionManager : MonoBehaviour
 
     void SpawnCards()
     {
+        // Bersihkan kartu yang sudah ada sebelumnya jika dipanggil ulang
+        foreach (var card in spawnedCards)
+        {
+            if (card != null) Destroy(card.gameObject);
+        }
+        spawnedCards.Clear();
+
         foreach (var buffData in availableBuffs)
         {
             GameObject cardObj = Instantiate(buffCardPrefab, cardContainer);
@@ -69,5 +97,8 @@ public class BuffSelectionManager : MonoBehaviour
 
         // Resume game
         Time.timeScale = 1f;
+
+        // Panggil callback setelah pemilihan selesai
+        OnBuffSelectionComplete?.Invoke();
     }
 }
