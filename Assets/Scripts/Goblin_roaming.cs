@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
  
-public class flyingEye_roaming : MonoBehaviour
+public class Goblin_roaming : MonoBehaviour
 {
     [Header("Patrol Settings")]
     [SerializeField] private float moveSpeed = 2f;
@@ -62,7 +62,6 @@ public class flyingEye_roaming : MonoBehaviour
 
                     if (distanceToPlayer <= attackRange)
                     {
-                        // In attack range — stop and attack
                         rb.velocity = Vector2.zero;
                         animator.SetBool("isWalking", false);
 
@@ -71,22 +70,18 @@ public class flyingEye_roaming : MonoBehaviour
                     }
                     else if (isAttacking)
                     {
-                        // Mid-attack, out of attack range — hover in place
                         rb.velocity = Vector2.zero;
                         animator.SetBool("isWalking", false);
                     }
                     else
                     {
-                        // Not attacking — chase player
                         MoveTowardTarget(playerTransform.position);
                     }
-
                     return;
                 }
             }
         }
 
-        // --- Normal Patrol Logic ---
         if (isAttacking) return;
 
         if (isWaiting)

@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
  
-public class flyingEye_roaming : MonoBehaviour
+public class goblin_roaming : MonoBehaviour
 {
     [Header("Patrol Settings")]
     [SerializeField] private float moveSpeed = 2f;
-    [SerializeField] private float patrolDistance = 10f;
-    [SerializeField] private float waitTime = 1f;
+    [SerializeField] private float patrolDistance = 10f;   // how far it walks in each direction
+    [SerializeField] private float waitTime = 1f;         // pause duration at each end point
  
     [Header("Combat Settings")]
     [SerializeField] private float chaseRange = 5f;
@@ -40,15 +40,20 @@ public class flyingEye_roaming : MonoBehaviour
 
     void Start()
     {
+        // Automatically find player
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
+        {
             playerTransform = playerObj.transform;
+        }
     }
  
     void FixedUpdate()
     {
+        // Don't do anything if dead (handled by EnemyHealth)
         if (TryGetComponent<EnemyHealth>(out var eh) && eh.IsDead) return;
 
+        // If player exists and is alive, evaluate distance
         if (playerTransform != null)
         {
             HealthPlayer playerHealth = playerTransform.GetComponent<HealthPlayer>();
@@ -58,30 +63,26 @@ public class flyingEye_roaming : MonoBehaviour
 
                 if (distanceToPlayer <= chaseRange)
                 {
-                    isWaiting = false;
+                    // Chase and attack behavior
+                    isWaiting = false; // Interrupt patrol wait
 
                     if (distanceToPlayer <= attackRange)
                     {
-                        // In attack range — stop and attack
+                        // Stop moving and attack
                         rb.velocity = Vector2.zero;
                         animator.SetBool("isWalking", false);
 
                         if (Time.time >= lastAttackTime + attackCooldown && !isAttacking)
+                        {
                             StartCoroutine(AttackSequence());
+                        }
                     }
-                    else if (isAttacking)
+                    else if (!isAttacking)
                     {
-                        // Mid-attack, out of attack range — hover in place
-                        rb.velocity = Vector2.zero;
-                        animator.SetBool("isWalking", false);
-                    }
-                    else
-                    {
-                        // Not attacking — chase player
+                        // Move toward player
                         MoveTowardTarget(playerTransform.position);
                     }
-
-                    return;
+                    return; // Skip normal patrol logic
                 }
             }
         }
@@ -125,6 +126,7 @@ public class flyingEye_roaming : MonoBehaviour
         rb.velocity = direction * moveSpeed;
         animator.SetBool("isWalking", true);
  
+        // Flip sprite to face movement direction
         if (direction.x != 0)
             transform.localScale = new Vector3(Mathf.Sign(direction.x) * originalScale.x, originalScale.y, originalScale.z);
     }
@@ -135,15 +137,21 @@ public class flyingEye_roaming : MonoBehaviour
         rb.velocity = Vector2.zero;
         animator.SetBool("isWalking", false);
 
+        // Face the player before attacking
         Vector2 directionToPlayer = (playerTransform.position - transform.position).normalized;
         if (directionToPlayer.x != 0)
+        {
             transform.localScale = new Vector3(Mathf.Sign(directionToPlayer.x) * originalScale.x, originalScale.y, originalScale.z);
+        }
 
+        // Trigger attack animation
         animator.SetTrigger("Attack");
         lastAttackTime = Time.time;
 
+        // Delay to sync damage with sword swing visual (approx 0.3 seconds)
         yield return new WaitForSeconds(0.3f);
 
+        // Check if player is still in range to apply damage
         if (playerTransform != null)
         {
             HealthPlayer playerHealth = playerTransform.GetComponent<HealthPlayer>();
@@ -151,26 +159,33 @@ public class flyingEye_roaming : MonoBehaviour
             {
                 float finalDistance = Vector2.Distance(transform.position, playerTransform.position);
                 if (finalDistance <= attackRange)
+                {
                     playerHealth.TakeDamage(attackDamage);
+                }
             }
         }
 
+        // Wait a little before enabling movement again (recovery frames)
         yield return new WaitForSeconds(0.4f);
         isAttacking = false;
     }
  
+    // Draw patrol range & aggro range in the editor for easy tuning
     private void OnDrawGizmosSelected()
     {
         Vector2 origin = Application.isPlaying ? startPosition : (Vector2)transform.position;
         
+        // Patrol range (yellow)
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(origin + Vector2.left * patrolDistance, origin + Vector2.right * patrolDistance);
         Gizmos.DrawWireSphere(origin + Vector2.left  * patrolDistance, 0.15f);
         Gizmos.DrawWireSphere(origin + Vector2.right * patrolDistance, 0.15f);
 
+        // Aggro range (orange)
         Gizmos.color = new Color(1f, 0.6f, 0f);
         Gizmos.DrawWireSphere(transform.position, chaseRange);
 
+        // Attack range (red)
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
     }

@@ -5507,6 +5507,7 @@ MonoBehaviour:
   maxX: Infinity
   minY: -Infinity
   maxY: Infinity
+  mapBoundaryCollider: {fileID: 0}
 --- !u!1 &1168549724
 GameObject:
   m_ObjectHideFlags: 0
@@ -17394,6 +17395,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -2000552553439753116, guid: 408dc71b45f5dc940b2423bb3f4cfc5a,
         type: 3}
+      propertyPath: m_speed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: -2000552553439753116, guid: 408dc71b45f5dc940b2423bb3f4cfc5a,
+        type: 3}
       propertyPath: m_attackPoint
       value: 
       objectReference: {fileID: 984084396}
@@ -17527,7 +17533,6 @@ GameObject:
   - component: {fileID: 1799929724}
   - component: {fileID: 1799929723}
   - component: {fileID: 1799929726}
-  - component: {fileID: 1799929730}
   - component: {fileID: 1799929729}
   - component: {fileID: 1799929728}
   - component: {fileID: 1799929727}
@@ -17716,7 +17721,7 @@ MonoBehaviour:
   waitTime: 1
   chaseRange: 5
   attackRange: 1.5
-  attackDamage: 15
+  attackDamage: 7
   attackCooldown: 1.5
 --- !u!114 &1799929729
 MonoBehaviour:
@@ -17732,21 +17737,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_maxHealth: 50
   m_currentHealth: 50
-  m_healthSlider: {fileID: 0}
---- !u!114 &1799929730
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1799929722}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b0248a38e0422a4dba10dc82717f03f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_maxHealth: 50
-  m_currentHealth: 50
+  m_healthSlider: {fileID: 2065682883}
 --- !u!1 &1826985360 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6323719953710832613, guid: 408dc71b45f5dc940b2423bb3f4cfc5a,
