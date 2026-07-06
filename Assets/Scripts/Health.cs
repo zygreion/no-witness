@@ -27,4 +27,15 @@ public class Health : MonoBehaviour
         m_currentHealth = m_maxHealth;
         IsDead = false;
     }
+
+    public virtual void Heal(float amount)
+{
+    m_currentHealth = Mathf.Clamp(m_currentHealth + amount, 0, m_maxHealth);
+}
+
+public virtual void IncreaseMaxHealth(float amount)
+{
+    m_maxHealth += amount;
+    m_currentHealth = m_maxHealth;
+}
 }
