@@ -24,6 +24,10 @@ public class Miniboss_Combat : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         originalScale = transform.localScale;
+
+        UnityEngine.UI.Slider healthSlider = GameObject.Find("HealthSlider").GetComponent<UnityEngine.UI.Slider>();
+        Debug.Log(name);
+        Debug.Log(healthSlider);
     }
 
     void Start()
