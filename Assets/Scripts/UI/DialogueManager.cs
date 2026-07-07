@@ -51,6 +51,9 @@ public class DialogueManager : MonoBehaviour
             
         if (m_continueIndicator != null)
             m_continueIndicator.SetActive(false);
+
+        if (m_backgroundImage != null)
+            m_backgroundImage.gameObject.SetActive(false);
     }
 
     private void Update()

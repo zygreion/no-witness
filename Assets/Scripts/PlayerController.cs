@@ -171,7 +171,14 @@ public class PlayerController : MonoBehaviour
         // Move
         dir.Normalize();
         if (!m_isRolling)
-            m_body2d.velocity = m_speed * dir;
+        {
+            float currentSpeed = m_speed;
+            if (BuffApplier.Instance != null)
+            {
+                currentSpeed *= BuffApplier.Instance.speedMultiplier;
+            }
+            m_body2d.velocity = currentSpeed * dir;
+        }
 
         if (!m_healthPlayer.IsDead)
         {
@@ -344,6 +351,13 @@ public class PlayerController : MonoBehaviour
         // Keep track of already damaged targets to prevent double damage
         HashSet<Health> damagedTargets = new HashSet<Health>();
 
+        // Calculate buff damage multiplier if applicable
+        float finalDamage = m_attackDamage;
+        if (BuffApplier.Instance != null)
+        {
+            finalDamage *= BuffApplier.Instance.attackMultiplier;
+        }
+
         // Damage each enemy
         foreach (Collider2D enemy in hitEnemies)
         {
@@ -351,7 +365,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (!damagedTargets.Contains(enemyHealth))
                 {
-                    enemyHealth.TakeDamage(m_attackDamage);
+                    enemyHealth.TakeDamage(finalDamage);
                     damagedTargets.Add(enemyHealth);
                 }
             }
