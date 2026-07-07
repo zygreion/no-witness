@@ -4680,12 +4680,12 @@ PrefabInstance:
     - target: {fileID: 779749202391492040, guid: 408dc71b45f5dc940b2423bb3f4cfc5a,
         type: 3}
       propertyPath: m_maxHealth
-      value: 400
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 779749202391492040, guid: 408dc71b45f5dc940b2423bb3f4cfc5a,
         type: 3}
       propertyPath: m_currentHealth
-      value: 400
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 2954181336601895002, guid: 408dc71b45f5dc940b2423bb3f4cfc5a,
         type: 3}
@@ -8495,12 +8495,12 @@ PrefabInstance:
     - target: {fileID: 7623500000796108783, guid: 87b232d05a46758468eb3f0f0fad1eca,
         type: 3}
       propertyPath: m_maxHealth
-      value: 400
+      value: 450
       objectReference: {fileID: 0}
     - target: {fileID: 7623500000796108783, guid: 87b232d05a46758468eb3f0f0fad1eca,
         type: 3}
       propertyPath: m_currentHealth
-      value: 400
+      value: 450
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -18160,6 +18160,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4121725611449210137, guid: 4cd51ba45db64c14a8f4e4f09f891a1f,
+        type: 3}
+      propertyPath: healAmount
+      value: 40
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -21537,6 +21542,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4121725611449210137, guid: 4cd51ba45db64c14a8f4e4f09f891a1f,
+        type: 3}
+      propertyPath: healAmount
+      value: 40
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -22922,6 +22932,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4121725611449210137, guid: 4cd51ba45db64c14a8f4e4f09f891a1f,
+        type: 3}
+      propertyPath: healAmount
+      value: 40
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
