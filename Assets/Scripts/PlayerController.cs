@@ -270,6 +270,8 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
         {
             m_healthPlayer.Revive();
+            m_currentStamina = m_maxStamina;
+            UpdateStaminaGfx();
         }
     }
 

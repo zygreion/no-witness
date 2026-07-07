@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Miniboss_Combat : MonoBehaviour
 {
@@ -18,16 +19,13 @@ public class Miniboss_Combat : MonoBehaviour
     private float lastAttackTime = 0f;
     private bool isAttacking = false;
     private int lastAttack = 0; // tracks which attack was last used
+    private Slider healthSlider;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         originalScale = transform.localScale;
-
-        UnityEngine.UI.Slider healthSlider = GameObject.Find("HealthSlider").GetComponent<UnityEngine.UI.Slider>();
-        Debug.Log(name);
-        Debug.Log(healthSlider);
     }
 
     void Start()
@@ -35,6 +33,8 @@ public class Miniboss_Combat : MonoBehaviour
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
             playerTransform = playerObj.transform;
+
+        healthSlider = GetComponentInChildren<Slider>(true);
     }
 
     void FixedUpdate()
@@ -87,7 +87,13 @@ public class Miniboss_Combat : MonoBehaviour
         animator.SetBool("isRunning", true);
 
         if (direction.x != 0)
+        {
             transform.localScale = new Vector3(Mathf.Sign(direction.x) * originalScale.x, originalScale.y, originalScale.z);
+
+            Slider.Direction sliderDir = direction.x > 0 ? Slider.Direction.LeftToRight : Slider.Direction.RightToLeft;
+            if (healthSlider != null)
+                healthSlider.SetDirection(sliderDir, false);
+        }
     }
 
     private IEnumerator AttackSequence()

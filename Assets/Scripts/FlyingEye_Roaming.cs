@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class flyingEye_roaming : MonoBehaviour
 {
@@ -28,6 +29,7 @@ public class flyingEye_roaming : MonoBehaviour
     private Transform playerTransform;
     private float lastAttackTime = 0f;
     private bool isAttacking = false;
+    private Slider healthSlider;
 
     void Awake()
     {
@@ -43,6 +45,8 @@ public class flyingEye_roaming : MonoBehaviour
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
             playerTransform = playerObj.transform;
+
+        healthSlider = GetComponentInChildren<Slider>(true);
     }
 
     void FixedUpdate()
@@ -122,7 +126,13 @@ public class flyingEye_roaming : MonoBehaviour
         rb.velocity = direction * moveSpeed;
 
         if (direction.x != 0)
+        {
             transform.localScale = new Vector3(Mathf.Sign(direction.x) * originalScale.x, originalScale.y, originalScale.z);
+
+            Slider.Direction sliderDir = direction.x > 0 ? Slider.Direction.LeftToRight : Slider.Direction.RightToLeft;
+            if (healthSlider != null)
+                healthSlider.SetDirection(sliderDir, false);
+        }
     }
 
     private IEnumerator AttackSequence()
