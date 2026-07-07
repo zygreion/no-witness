@@ -10,6 +10,13 @@ public class Goblin_roaming : MonoBehaviour
     [SerializeField] private float patrolDistance = 10f;
     [SerializeField] private float waitTime = 1f;
 
+    // Monster can has different height than player
+    // This variable adjust whenever monster chasing / attacking player
+    // Try set the value to 0f to see that tall monster
+    // Will chase player's foot instead player's body
+    [Header("Chase & Attack Pivot")]
+    [SerializeField] private float yPivotOffset = 1.8f;
+
     [Header("Combat Settings")]
     [SerializeField] private float chaseRange = 5f;
     [SerializeField] private float attackRange = 1.3f;
@@ -59,7 +66,7 @@ public class Goblin_roaming : MonoBehaviour
             HealthPlayer playerHealth = playerTransform.GetComponent<HealthPlayer>();
             if (playerHealth != null && !playerHealth.IsDead)
             {
-                float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
+                float distanceToPlayer = Vector2.Distance(transform.position, GetPlayerTransformOffset());
 
                 if (distanceToPlayer <= chaseRange)
                 {
@@ -80,7 +87,7 @@ public class Goblin_roaming : MonoBehaviour
                     }
                     else
                     {
-                        MoveTowardTarget(playerTransform.position);
+                        MoveTowardTarget(GetPlayerTransformOffset());
                     }
                     return;
                 }
@@ -141,7 +148,7 @@ public class Goblin_roaming : MonoBehaviour
         rb.velocity = Vector2.zero;
         animator.SetBool("isWalking", false);
 
-        Vector2 directionToPlayer = (playerTransform.position - transform.position).normalized;
+        Vector2 directionToPlayer = (GetPlayerTransformOffset() - transform.position).normalized;
         if (directionToPlayer.x != 0)
             transform.localScale = new Vector3(Mathf.Sign(directionToPlayer.x) * originalScale.x, originalScale.y, originalScale.z);
 
@@ -155,7 +162,7 @@ public class Goblin_roaming : MonoBehaviour
             HealthPlayer playerHealth = playerTransform.GetComponent<HealthPlayer>();
             if (playerHealth != null && !playerHealth.IsDead)
             {
-                float finalDistance = Vector2.Distance(transform.position, playerTransform.position);
+                float finalDistance = Vector2.Distance(transform.position, GetPlayerTransformOffset());
                 if (finalDistance <= attackRange)
                     playerHealth.TakeDamage(attackDamage);
             }
@@ -189,5 +196,13 @@ public class Goblin_roaming : MonoBehaviour
             movingRight = !movingRight;
             SetNextTarget();
         }
+    }
+
+    private Vector3 GetPlayerTransformOffset()
+    {
+        Vector3 playerPosOffset = playerTransform.position;
+        playerPosOffset.y += yPivotOffset;
+
+        return playerPosOffset;
     }
 }

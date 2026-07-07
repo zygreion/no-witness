@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Testing Mode")]
+    [SerializeField] bool _isTestingMode = false;
+
     [Header("Movement")]
     [SerializeField] float m_speed;
     [SerializeField] float m_rollForce = 6.0f;
@@ -183,14 +186,14 @@ public class PlayerController : MonoBehaviour
         if (!m_healthPlayer.IsDead)
         {
             //Death
-            if (Input.GetKeyDown(KeyCode.E) && !m_isRolling)
+            if (_isTestingMode && Input.GetKeyDown(KeyCode.E) && !m_isRolling)
             {
                 m_animator.SetBool("noBlood", m_noBlood);
                 m_animator.SetTrigger("Death");
             }
 
             //Hurt
-            else if (Input.GetKeyDown(KeyCode.Q) && !m_isRolling)
+            else if (_isTestingMode && Input.GetKeyDown(KeyCode.Q) && !m_isRolling)
                 m_healthPlayer.TakeDamage(10);
 
             //Attack
@@ -274,7 +277,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.R))
+        if (_isTestingMode && Input.GetKeyDown(KeyCode.R))
         {
             m_healthPlayer.Revive();
             m_currentStamina = m_maxStamina;

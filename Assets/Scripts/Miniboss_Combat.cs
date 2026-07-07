@@ -11,6 +11,13 @@ public class Miniboss_Combat : MonoBehaviour
     [SerializeField] private float attackDamage = 20f;
     [SerializeField] private float attackCooldown = 1.5f;
 
+    // Monster can has different height than player
+    // This variable adjust whenever monster chasing / attacking player
+    // Try set the value to 0f to see that tall monster
+    // Will chase player's foot instead player's body
+    [Header("Chase & Attack Pivot")]
+    [SerializeField] private float yPivotOffset = 2.0f;
+
     private Rigidbody2D rb;
     private Animator animator;
     private Vector3 originalScale;
@@ -46,7 +53,7 @@ public class Miniboss_Combat : MonoBehaviour
             HealthPlayer playerHealth = playerTransform.GetComponent<HealthPlayer>();
             if (playerHealth != null && !playerHealth.IsDead)
             {
-                float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
+                float distanceToPlayer = Vector2.Distance(transform.position, GetPlayerTransformOffset());
 
                 if (distanceToPlayer <= chaseRange)
                 {
@@ -82,7 +89,7 @@ public class Miniboss_Combat : MonoBehaviour
 
     private void MoveTowardPlayer()
     {
-        Vector2 direction = ((Vector2)playerTransform.position - (Vector2)transform.position).normalized;
+        Vector2 direction = ((Vector2)GetPlayerTransformOffset() - (Vector2)transform.position).normalized;
         rb.velocity = direction * 3f;
         animator.SetBool("isRunning", true);
 
@@ -103,7 +110,7 @@ public class Miniboss_Combat : MonoBehaviour
         animator.SetBool("isRunning", false);
 
         // Face the player
-        Vector2 directionToPlayer = ((Vector2)playerTransform.position - (Vector2)transform.position).normalized;
+        Vector2 directionToPlayer = ((Vector2)GetPlayerTransformOffset() - (Vector2)transform.position).normalized;
         if (directionToPlayer.x != 0)
             transform.localScale = new Vector3(Mathf.Sign(directionToPlayer.x) * originalScale.x, originalScale.y, originalScale.z);
 
@@ -120,7 +127,7 @@ public class Miniboss_Combat : MonoBehaviour
             HealthPlayer playerHealth = playerTransform.GetComponent<HealthPlayer>();
             if (playerHealth != null && !playerHealth.IsDead)
             {
-                float finalDistance = Vector2.Distance(transform.position, playerTransform.position);
+                float finalDistance = Vector2.Distance(transform.position, GetPlayerTransformOffset());
                 if (finalDistance <= attackRange)
                     playerHealth.TakeDamage(attackDamage);
             }
@@ -137,5 +144,13 @@ public class Miniboss_Combat : MonoBehaviour
 
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
+    }
+
+    private Vector3 GetPlayerTransformOffset()
+    {
+        Vector3 playerPosOffset = playerTransform.position;
+        playerPosOffset.y += yPivotOffset;
+
+        return playerPosOffset;
     }
 }
