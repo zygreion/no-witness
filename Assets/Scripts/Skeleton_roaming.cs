@@ -1,14 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
- 
+using UnityEngine.UI;
+
 public class Skeleton_roaming : MonoBehaviour
 {
     [Header("Patrol Settings")]
     [SerializeField] private float moveSpeed = 2f;
     [SerializeField] private float patrolDistance = 10f;   // how far it walks in each direction
     [SerializeField] private float waitTime = 1f;         // pause duration at each end point
- 
+
     [Header("Combat Settings")]
     [SerializeField] private float chaseRange = 5f;
     [SerializeField] private float attackRange = 1.3f;
@@ -20,15 +21,16 @@ public class Skeleton_roaming : MonoBehaviour
     private bool movingRight = true;
     private float waitTimer = 0f;
     private bool isWaiting = false;
- 
+
     private Rigidbody2D rb;
     private Animator animator;
     private Vector3 originalScale;
-    
+
     private Transform playerTransform;
     private float lastAttackTime = 0f;
     private bool isAttacking = false;
- 
+    private Slider healthSlider;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -43,11 +45,11 @@ public class Skeleton_roaming : MonoBehaviour
         // Automatically find player
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
-        {
             playerTransform = playerObj.transform;
-        }
+
+        healthSlider = GetComponentInChildren<Slider>(true);
     }
- 
+
     void FixedUpdate()
     {
         // Don't do anything if dead (handled by EnemyHealth)
@@ -95,7 +97,7 @@ public class Skeleton_roaming : MonoBehaviour
             rb.velocity = Vector2.zero;
             animator.SetBool("isWalking", false);
             waitTimer -= Time.fixedDeltaTime;
- 
+
             if (waitTimer <= 0f)
             {
                 isWaiting = false;
@@ -104,31 +106,37 @@ public class Skeleton_roaming : MonoBehaviour
             }
             return;
         }
- 
+
         MoveTowardTarget(targetPosition);
- 
+
         if (Vector2.Distance(transform.position, targetPosition) < 0.3f)
         {
             isWaiting = true;
             waitTimer = waitTime;
         }
     }
- 
+
     private void SetNextTarget()
     {
         float direction = movingRight ? 1f : -1f;
         targetPosition = startPosition + new Vector2(direction * patrolDistance, 0f);
     }
- 
+
     private void MoveTowardTarget(Vector2 destination)
     {
         Vector2 direction = (destination - (Vector2)transform.position).normalized;
         rb.velocity = direction * moveSpeed;
         animator.SetBool("isWalking", true);
- 
+
         // Flip sprite to face movement direction
         if (direction.x != 0)
+        {
             transform.localScale = new Vector3(Mathf.Sign(direction.x) * originalScale.x, originalScale.y, originalScale.z);
+
+            Slider.Direction sliderDir = direction.x > 0 ? Slider.Direction.LeftToRight : Slider.Direction.RightToLeft;
+            if (healthSlider != null)
+                healthSlider.SetDirection(sliderDir, false);
+        }
     }
 
     private IEnumerator AttackSequence()
@@ -169,16 +177,16 @@ public class Skeleton_roaming : MonoBehaviour
         yield return new WaitForSeconds(0.4f);
         isAttacking = false;
     }
- 
+
     // Draw patrol range & aggro range in the editor for easy tuning
     private void OnDrawGizmosSelected()
     {
         Vector2 origin = Application.isPlaying ? startPosition : (Vector2)transform.position;
-        
+
         // Patrol range (yellow)
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(origin + Vector2.left * patrolDistance, origin + Vector2.right * patrolDistance);
-        Gizmos.DrawWireSphere(origin + Vector2.left  * patrolDistance, 0.15f);
+        Gizmos.DrawWireSphere(origin + Vector2.left * patrolDistance, 0.15f);
         Gizmos.DrawWireSphere(origin + Vector2.right * patrolDistance, 0.15f);
 
         // Aggro range (orange)

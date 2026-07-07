@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BringerOfDeath_Combat : MonoBehaviour
 {
@@ -32,6 +33,7 @@ public class BringerOfDeath_Combat : MonoBehaviour
     private float lastMeleeTime = 0f;
     private float lastSpellTime = 0f;
     private bool isAttacking = false;
+    private Slider healthSlider;
 
     void Awake()
     {
@@ -45,6 +47,8 @@ public class BringerOfDeath_Combat : MonoBehaviour
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
             playerTransform = playerObj.transform;
+
+        healthSlider = GetComponentInChildren<Slider>(true);
     }
 
     void FixedUpdate()
@@ -117,38 +121,44 @@ public class BringerOfDeath_Combat : MonoBehaviour
         animator.SetBool("isWalking", true);
 
         if (direction.x != 0)
-            transform.localScale = new Vector3(-Mathf.Sign(direction.x) * originalScale.x, originalScale.y, originalScale.z);
-    }
-
-    private IEnumerator MeleeSequence()
-{
-    isAttacking = true;
-    rb.velocity = Vector2.zero;
-    animator.SetBool("isWalking", false);
-
-    FacePlayer();
-    animator.SetTrigger("Attack");
-    lastMeleeTime = Time.time;
-
-    yield return new WaitForSeconds(0.3f);
-
-    // Apply melee damage at offset position
-    float facingDirection = Mathf.Sign(transform.localScale.x);
-    Vector2 meleeTarget = (Vector2)transform.position + new Vector2(facingDirection * meleeOffsetX, meleeOffsetY);
-
-    Collider2D[] hits = Physics2D.OverlapCircleAll(meleeTarget, meleeRange);
-    foreach (Collider2D hit in hits)
-    {
-        if (hit.TryGetComponent<HealthPlayer>(out var playerHealth))
         {
-            if (!playerHealth.IsDead)
-                playerHealth.TakeDamage(meleeDamage);
+            transform.localScale = new Vector3(-Mathf.Sign(direction.x) * originalScale.x, originalScale.y, originalScale.z);
+
+            Slider.Direction sliderDir = direction.x > 0 ? Slider.Direction.LeftToRight : Slider.Direction.RightToLeft;
+            if (healthSlider != null)
+                healthSlider.SetDirection(sliderDir, false);
         }
     }
 
-    yield return new WaitForSeconds(0.5f);
-    isAttacking = false;
-}
+    private IEnumerator MeleeSequence()
+    {
+        isAttacking = true;
+        rb.velocity = Vector2.zero;
+        animator.SetBool("isWalking", false);
+
+        FacePlayer();
+        animator.SetTrigger("Attack");
+        lastMeleeTime = Time.time;
+
+        yield return new WaitForSeconds(0.3f);
+
+        // Apply melee damage at offset position
+        float facingDirection = Mathf.Sign(transform.localScale.x);
+        Vector2 meleeTarget = (Vector2)transform.position + new Vector2(facingDirection * meleeOffsetX, meleeOffsetY);
+
+        Collider2D[] hits = Physics2D.OverlapCircleAll(meleeTarget, meleeRange);
+        foreach (Collider2D hit in hits)
+        {
+            if (hit.TryGetComponent<HealthPlayer>(out var playerHealth))
+            {
+                if (!playerHealth.IsDead)
+                    playerHealth.TakeDamage(meleeDamage);
+            }
+        }
+
+        yield return new WaitForSeconds(0.5f);
+        isAttacking = false;
+    }
 
     private IEnumerator SpellSequence()
     {
@@ -209,11 +219,11 @@ public class BringerOfDeath_Combat : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, spellAoeRadius);
 
         float facingDirection = Mathf.Sign(transform.localScale.x);
-Gizmos.color = Color.cyan;
-Gizmos.DrawWireSphere((Vector2)transform.position + new Vector2(facingDirection * spellOffset, 0f), spellAoeRadius);
-Gizmos.DrawWireSphere((Vector2)transform.position + new Vector2(facingDirection * spellOffset, spellOffsetY), spellAoeRadius);
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere((Vector2)transform.position + new Vector2(facingDirection * spellOffset, 0f), spellAoeRadius);
+        Gizmos.DrawWireSphere((Vector2)transform.position + new Vector2(facingDirection * spellOffset, spellOffsetY), spellAoeRadius);
 
-Gizmos.color = Color.red;
-Gizmos.DrawWireSphere((Vector2)transform.position + new Vector2(facingDirection * meleeOffsetX, meleeOffsetY), meleeRange);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere((Vector2)transform.position + new Vector2(facingDirection * meleeOffsetX, meleeOffsetY), meleeRange);
     }
 }
