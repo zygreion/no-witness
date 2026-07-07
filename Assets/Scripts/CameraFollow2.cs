@@ -74,7 +74,7 @@ public class CameraFollow2 : MonoBehaviour
 
         Vector3 offset = new Vector3(offsetX, offsetY, 0.0f);
         Vector3 targetPos = target.position + offset;
-        
+
         Vector3 newPos = isLerping ? Vector3.Lerp(transform.position, targetPos, lerpSpeed * Time.deltaTime) : targetPos;
 
         float currentMinX = minX;
