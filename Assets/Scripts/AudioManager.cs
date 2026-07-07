@@ -77,6 +77,7 @@ public class AudioManager : MonoBehaviour
             case "Tutorial":
                 PlayMusic(m_tutorialBGM);
                 break;
+            case "Credit":
             case "Credits":
                 PlayMusic(m_creditsBGM);
                 break;
@@ -108,6 +109,7 @@ public class AudioManager : MonoBehaviour
             case "Tutorial":
                 PlayMusic(m_tutorialBGM);
                 break;
+            case "Credit":
             case "Credits":
                 PlayMusic(m_creditsBGM);
                 break;
