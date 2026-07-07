@@ -12,10 +12,10 @@ EditorBuildSettings:
     path: Assets/Scenes/Dungeon 1.unity
     guid: 1cdd9ed109fecaf449a9e56a22446092
   - enabled: 1
-    path: Assets/Scenes/Dungeon 2.unity
+    path: Assets/Scenes/Development/Dungeon 2.unity
     guid: 278e4259339aa684a8d02381ed3c93af
   - enabled: 1
-    path: Assets/Scenes/CombatTest.unity
+    path: Assets/Scenes/Development/CombatTest.unity
     guid: c7f36d2a3b521ed49b4fadb9a6421dbd
   - enabled: 1
     path: Assets/Scenes/IntroDialogue.unity
@@ -26,4 +26,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Tutorial.unity
     guid: 3036f57c110b0c94ca39af55513755bc
+  - enabled: 1
+    path: Assets/Scenes/Credit.unity
+    guid: f753e065ab2b8f04082761232018928c
   m_configObjects: {}
