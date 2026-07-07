@@ -15,8 +15,9 @@ public class Dungeon1Manager : MonoBehaviour
         Wave3Miniboss,       // Pertarungan Wave 3 (Evil Wizard Miniboss & Flying Eyes)
         MinibossOutro,       // Dialog 4: Monolog Alaric setelah miniboss kalah
         Wave4Combat,         // Pertarungan Wave 4 (Creeps di lantai bawah setelah tangga terbuka)
+        Wave5Combat,         // Pertarungan Wave 5 (Creeps di Boss Room sebelum boss)
         MainBossEncounter,   // Dialog 5: Pertemuan Alaric dengan Boss Utama di bawah
-        Wave5Boss,           // Pertarungan Wave 5 (Pertarungan Boss Utama)
+        Wave6Boss,           // Pertarungan Wave 6 (Main Boss & Creeps saling bertarung)
         MainBossOutro,       // Dialog 6: Monolog Akhir Alaric setelah Boss Utama kalah
         DungeonCompleted     // Portal transisi level berikutnya aktif
     }
@@ -36,8 +37,14 @@ public class Dungeon1Manager : MonoBehaviour
     [Header("Wave 4 Enemies (Lower Creeps)")]
     [SerializeField] private List<GameObject> m_wave4Enemies = new List<GameObject>();
 
-    [Header("Wave 5 Enemies (Main Boss Room)")]
+    [Header("Wave 5 Enemies (Main Boss Room Creeps)")]
     [SerializeField] private List<GameObject> m_wave5Enemies = new List<GameObject>();
+
+    [Header("Wave 6 Enemies (Main Boss Fight Creeps)")]
+    [SerializeField] private List<GameObject> m_wave6Enemies = new List<GameObject>();
+
+    [Header("Main Boss Object")]
+    [SerializeField] private GameObject m_mainBossObject;
 
     [Header("Dialogue Triggers")]
     [SerializeField] private DialogueTrigger m_introMonologueTrigger;      // Dialog 1
@@ -62,11 +69,18 @@ public class Dungeon1Manager : MonoBehaviour
             SetEnemyAIActive(enemy, false);
         }
 
-        // 2. Sembunyikan Wave 2, 3, 4, & 5 musuh sepenuhnya di awal
+        // 2. Sembunyikan Wave 2, 3, 4, 5, & 6 musuh sepenuhnya di awal
         SetWaveActive(m_wave2Enemies, false);
         SetWaveActive(m_wave3Enemies, false);
         SetWaveActive(m_wave4Enemies, false);
         SetWaveActive(m_wave5Enemies, false);
+        SetWaveActive(m_wave6Enemies, false);
+        
+        if (m_mainBossObject != null)
+        {
+            m_mainBossObject.SetActive(false);
+            SetEnemyAIActive(m_mainBossObject, false);
+        }
 
         // 3. Pasang pembatas jalan ke lantai bawah di awal
         SetBarrierActive(m_exitBarrier1, true);
@@ -140,12 +154,19 @@ public class Dungeon1Manager : MonoBehaviour
             case DungeonPhase.Wave4Combat:
                 if (IsWaveDefeated(m_wave4Enemies))
                 {
+                    StartWave5();
+                }
+                break;
+
+            case DungeonPhase.Wave5Combat:
+                if (IsWaveDefeated(m_wave5Enemies))
+                {
                     TriggerMainBossEncounter();
                 }
                 break;
 
-            case DungeonPhase.Wave5Boss:
-                if (IsWaveDefeated(m_wave5Enemies))
+            case DungeonPhase.Wave6Boss:
+                if (IsWaveDefeated(m_wave6Enemies))
                 {
                     m_currentPhase = DungeonPhase.MainBossOutro;
                     TriggerMainBossOutro();
@@ -271,13 +292,24 @@ public class Dungeon1Manager : MonoBehaviour
         }
     }
 
+    private void StartWave5()
+    {
+        m_currentPhase = DungeonPhase.Wave5Combat;
+        Debug.Log("[Dungeon1Manager] Wave 4 kalah. Memulai Wave 5 Combat!");
+        SetWaveActive(m_wave5Enemies, true);
+    }
+
     private void TriggerMainBossEncounter()
     {
         m_currentPhase = DungeonPhase.MainBossEncounter;
-        Debug.Log("[Dungeon1Manager] Wave 4 kalah. Memulai Main Boss Encounter (Dialog 5)...");
+        Debug.Log("[Dungeon1Manager] Wave 5 kalah. Memulai Main Boss Encounter (Dialog 5)...");
 
-        // Spawn Boss Utama dalam keadaan pasif terlebih dahulu
-        SetWaveActive(m_wave5Enemies, true, false);
+        // Hiduplah si boss di scene tapi pasif dulu
+        if (m_mainBossObject != null)
+        {
+            m_mainBossObject.SetActive(true);
+            SetEnemyAIActive(m_mainBossObject, false);
+        }
 
         if (m_mainBossEncounterTrigger != null)
         {
@@ -293,13 +325,19 @@ public class Dungeon1Manager : MonoBehaviour
     {
         if (m_currentPhase == DungeonPhase.MainBossEncounter)
         {
-            m_currentPhase = DungeonPhase.Wave5Boss;
-            Debug.Log("[Dungeon1Manager] Dialog Pertemuan Boss selesai. Memulai Wave 5 Combat (Main Boss Fight)!");
+            m_currentPhase = DungeonPhase.Wave6Boss;
+            Debug.Log("[Dungeon1Manager] Dialog Pertemuan Boss selesai. Memulai Wave 6 Combat (Boss & Creeps)!");
 
-            foreach (var enemy in m_wave5Enemies)
+            if (m_mainBossObject != null)
             {
-                if (enemy != null) SetEnemyAIActive(enemy, true);
+                if (!m_wave6Enemies.Contains(m_mainBossObject))
+                {
+                    m_wave6Enemies.Add(m_mainBossObject);
+                }
+                SetEnemyAIActive(m_mainBossObject, true);
             }
+
+            SetWaveActive(m_wave6Enemies, true);
         }
     }
 
@@ -423,6 +461,10 @@ public class Dungeon1Manager : MonoBehaviour
         // 5. Miniboss Combat script (class: Miniboss_Combat)
         if (enemy.TryGetComponent<Miniboss_Combat>(out var minibossRoam))
             minibossRoam.enabled = active;
+
+        // 6. Bringer of Death Boss Combat script (class: BringerOfDeath_Combat)
+        if (enemy.TryGetComponent<BringerOfDeath_Combat>(out var bossCombat))
+            bossCombat.enabled = active;
 
         // 6. Rigidbody2D body type
         if (enemy.TryGetComponent<Rigidbody2D>(out var rb))

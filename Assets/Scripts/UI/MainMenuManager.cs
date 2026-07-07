@@ -15,6 +15,19 @@ public class MainMenuManager : MonoBehaviour
         // Ensure correct panel state on start
         m_mainMenuPanel.SetActive(true);
         m_settingsPanel.SetActive(false);
+
+        // Make Continue button inactive/non-interactable
+        if (m_mainMenuPanel != null)
+        {
+            foreach (var btn in m_mainMenuPanel.GetComponentsInChildren<UnityEngine.UI.Button>(true))
+            {
+                if (btn.gameObject.name == "ContinueButton")
+                {
+                    btn.interactable = false;
+                    break;
+                }
+            }
+        }
     }
 
     /// <summary>
