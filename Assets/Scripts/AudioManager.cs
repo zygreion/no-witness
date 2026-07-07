@@ -13,6 +13,9 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip m_menuBGM;     // Music for Main Menu
     [SerializeField] private AudioClip m_dungeon1BGM; // Music for Dungeon 1
     [SerializeField] private AudioClip m_dungeon2BGM; // Music for Dungeon 2
+    [SerializeField] private AudioClip m_introBGM;     // Music for Intro Dialogue scene
+    [SerializeField] private AudioClip m_tutorialBGM;  // Music for Tutorial scene
+    [SerializeField] private AudioClip m_creditsBGM;   // Music for Credits scene
 
     private const string k_musicVolumeKey = "MusicVolume";
     private const string k_sfxVolumeKey = "SFXVolume";
@@ -67,6 +70,16 @@ public class AudioManager : MonoBehaviour
             case "Main-Menu":
                 PlayMusic(m_menuBGM);
                 break;
+            case "IntroDialogue":
+            case "Prologue":
+                PlayMusic(m_introBGM);
+                break;
+            case "Tutorial":
+                PlayMusic(m_tutorialBGM);
+                break;
+            case "Credits":
+                PlayMusic(m_creditsBGM);
+                break;
             case "Dungeon 1":
             case "CombatTest":
                 PlayMusic(m_dungeon1BGM);
@@ -87,6 +100,16 @@ public class AudioManager : MonoBehaviour
         {
             case "Main-Menu":
                 PlayMusic(m_menuBGM);
+                break;
+            case "IntroDialogue":
+            case "Prologue":
+                PlayMusic(m_introBGM);
+                break;
+            case "Tutorial":
+                PlayMusic(m_tutorialBGM);
+                break;
+            case "Credits":
+                PlayMusic(m_creditsBGM);
                 break;
             case "Dungeon 1":
             case "CombatTest":

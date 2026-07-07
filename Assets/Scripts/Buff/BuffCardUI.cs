@@ -34,13 +34,14 @@ public class BuffCardUI : MonoBehaviour
         if (cardStatText != null)
             cardStatText.text = statText;
 
-        selectButton.onClick.AddListener(OnCardClicked);
-        SetSelected(false);
+        selectButton.onClick.AddListener(OnConfirmClicked);
     }
 
-    void OnCardClicked()
+    // Klik tombol = langsung pilih sekaligus konfirmasi
+    void OnConfirmClicked()
     {
         manager.OnCardSelected(this, buffData);
+        manager.OnConfirmClicked();
     }
 
     public void SetSelected(bool selected)

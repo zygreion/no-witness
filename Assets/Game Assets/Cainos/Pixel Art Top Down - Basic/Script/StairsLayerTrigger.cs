@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,34 +17,74 @@ namespace Cainos.PixelArtTopDown_Basic
         public string layerLower;
         public string sortingLayerLower;
 
+        private static float lastLayerChangeTime;
+
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (direction == Direction.South && other.transform.position.y < transform.position.y) SetLayerAndSortingLayer(other.gameObject, layerUpper, sortingLayerUpper);
-            else
-            if (direction == Direction.West && other.transform.position.x < transform.position.x) SetLayerAndSortingLayer(other.gameObject, layerUpper, sortingLayerUpper);
-            else
-            if (direction == Direction.East && other.transform.position.x > transform.position.x) SetLayerAndSortingLayer(other.gameObject, layerUpper, sortingLayerUpper);
+            if (!other.CompareTag("Player")) return;
+            if (Time.time - lastLayerChangeTime < 0.3f) return;
 
+            GameObject target = other.attachedRigidbody != null ? other.attachedRigidbody.gameObject : other.gameObject;
+
+            if (direction == Direction.South && other.bounds.center.y < transform.position.y)
+            {
+                SetLayerAndSortingLayer(target, layerUpper, sortingLayerUpper);
+                lastLayerChangeTime = Time.time;
+            }
+            else
+            if (direction == Direction.West && other.bounds.center.x < transform.position.x)
+            {
+                SetLayerAndSortingLayer(target, layerUpper, sortingLayerUpper);
+                lastLayerChangeTime = Time.time;
+            }
+            else
+            if (direction == Direction.East && other.bounds.center.x > transform.position.x)
+            {
+                SetLayerAndSortingLayer(target, layerUpper, sortingLayerUpper);
+                lastLayerChangeTime = Time.time;
+            }
         }
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            if (direction == Direction.South && other.transform.position.y < transform.position.y) SetLayerAndSortingLayer(other.gameObject, layerLower, sortingLayerLower);
+            if (!other.CompareTag("Player")) return;
+            if (Time.time - lastLayerChangeTime < 0.3f) return;
+
+            GameObject target = other.attachedRigidbody != null ? other.attachedRigidbody.gameObject : other.gameObject;
+
+            if (direction == Direction.South && other.bounds.center.y < transform.position.y)
+            {
+                SetLayerAndSortingLayer(target, layerLower, sortingLayerLower);
+                lastLayerChangeTime = Time.time;
+            }
             else
-            if (direction == Direction.West && other.transform.position.x < transform.position.x) SetLayerAndSortingLayer(other.gameObject, layerLower, sortingLayerLower);
+            if (direction == Direction.West && other.bounds.center.x < transform.position.x)
+            {
+                SetLayerAndSortingLayer(target, layerLower, sortingLayerLower);
+                lastLayerChangeTime = Time.time;
+            }
             else
-            if (direction == Direction.East && other.transform.position.x > transform.position.x) SetLayerAndSortingLayer(other.gameObject, layerLower, sortingLayerLower);
+            if (direction == Direction.East && other.bounds.center.x > transform.position.x)
+            {
+                SetLayerAndSortingLayer(target, layerLower, sortingLayerLower);
+                lastLayerChangeTime = Time.time;
+            }
         }
 
         private void SetLayerAndSortingLayer( GameObject target, string layer, string sortingLayer )
         {
             target.layer = LayerMask.NameToLayer(layer);
 
-            target.GetComponent<SpriteRenderer>().sortingLayerName = sortingLayer;
-            SpriteRenderer[] srs = target.GetComponentsInChildren<SpriteRenderer>();
-            foreach (SpriteRenderer sr in srs)
+            SpriteRenderer sr = target.GetComponent<SpriteRenderer>();
+            if (sr != null)
             {
                 sr.sortingLayerName = sortingLayer;
+            }
+
+            SpriteRenderer[] srs = target.GetComponentsInChildren<SpriteRenderer>();
+            foreach (SpriteRenderer childSr in srs)
+            {
+                childSr.sortingLayerName = sortingLayer;
             }
         }
 

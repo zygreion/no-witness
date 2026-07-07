@@ -21,6 +21,19 @@ public class PlayerController : MonoBehaviour
     // Public properties for external access
     public bool IsRolling => m_isRolling;
     public bool IsBlocking => m_isBlocking;
+    public static PlayerController Instance { get; private set; }
+    private bool m_isDialogueLocked = false;
+    public bool IsDialogueLocked => m_isDialogueLocked;
+
+    public void LockPlayerControl(bool isLocked)
+    {
+        m_isDialogueLocked = isLocked;
+        if (isLocked)
+        {
+            if (m_body2d != null) m_body2d.velocity = Vector2.zero;
+            if (m_animator != null) m_animator.SetInteger("AnimState", 0);
+        }
+    }
 
     private Animator m_animator;
     private Rigidbody2D m_body2d;
@@ -59,14 +72,45 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
         m_animator = GetComponent<Animator>();
         m_body2d = GetComponent<Rigidbody2D>();
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
+        }
     }
 
     private void Start()
     {
         m_animator.SetBool("Grounded", true);
         m_healthPlayer = GetComponent<HealthPlayer>();
+
+        // Set player sorting order to 5 so they render in front of stairs/props on the same layer
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        if (sr != null)
+        {
+            sr.sortingOrder = 5;
+        }
+
+        // Sync sorting layer with physics layer on start to prevent startup visual glitches on stairs
+        string currentLayerName = LayerMask.LayerToName(gameObject.layer);
+        if (currentLayerName == "Layer 1" || currentLayerName == "Layer 2")
+        {
+            if (sr != null)
+            {
+                sr.sortingLayerName = currentLayerName;
+            }
+            SpriteRenderer[] srs = GetComponentsInChildren<SpriteRenderer>();
+            foreach (SpriteRenderer childSr in srs)
+            {
+                childSr.sortingLayerName = currentLayerName;
+            }
+        }
 
         if (m_staminaGfx == null) return;
         m_staminaGfxTransform = m_staminaGfx.GetComponent<RectTransform>();
@@ -75,6 +119,13 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (m_isDialogueLocked)
+        {
+            if (m_body2d != null) m_body2d.velocity = Vector2.zero;
+            if (m_animator != null) m_animator.SetInteger("AnimState", 0);
+            return;
+        }
+
         // Increase timer that controls attack combo
         m_timeSinceAttack += Time.deltaTime;
 
@@ -120,7 +171,14 @@ public class PlayerController : MonoBehaviour
         // Move
         dir.Normalize();
         if (!m_isRolling)
-            m_body2d.velocity = m_speed * dir;
+        {
+            float currentSpeed = m_speed;
+            if (BuffApplier.Instance != null)
+            {
+                currentSpeed *= BuffApplier.Instance.speedMultiplier;
+            }
+            m_body2d.velocity = currentSpeed * dir;
+        }
 
         if (!m_healthPlayer.IsDead)
         {
@@ -219,6 +277,8 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
         {
             m_healthPlayer.Revive();
+            m_currentStamina = m_maxStamina;
+            UpdateStaminaGfx();
         }
     }
 
@@ -293,6 +353,13 @@ public class PlayerController : MonoBehaviour
         // Keep track of already damaged targets to prevent double damage
         HashSet<Health> damagedTargets = new HashSet<Health>();
 
+        // Calculate buff damage multiplier if applicable
+        float finalDamage = m_attackDamage;
+        if (BuffApplier.Instance != null)
+        {
+            finalDamage *= BuffApplier.Instance.attackMultiplier;
+        }
+
         // Damage each enemy
         foreach (Collider2D enemy in hitEnemies)
         {
@@ -300,7 +367,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (!damagedTargets.Contains(enemyHealth))
                 {
-                    enemyHealth.TakeDamage(m_attackDamage);
+                    enemyHealth.TakeDamage(finalDamage);
                     damagedTargets.Add(enemyHealth);
                 }
             }

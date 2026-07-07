@@ -55,9 +55,9 @@ public class Item : MonoBehaviour
         }
 
         // Khusus Potion: langsung heal player
-        if (itemType == ItemType.Potion && PlayerStats.Instance != null)
+        if (itemType == ItemType.Potion && BuffApplier.Instance != null)
         {
-            PlayerStats.Instance.Heal(healAmount);
+            BuffApplier.Instance.Heal(healAmount);
         }
 
         // Spawn efek partikel

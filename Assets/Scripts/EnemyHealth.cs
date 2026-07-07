@@ -47,39 +47,47 @@ public class EnemyHealth : Health
     }
 
     private void Die()
+{
+    IsDead = true;
+
+    if (m_animator != null)
     {
-        IsDead = true;
-
-        if (m_animator != null)
-        {
-            m_animator.SetTrigger("Death");
-        }
-
-        // Hide health bar UI on death
-        if (m_healthSlider != null)
-        {
-            m_healthSlider.gameObject.SetActive(false);
-        }
-
-        // Disable movement & physics interactions
-        if (TryGetComponent<Collider2D>(out var col))
-        {
-            col.enabled = false;
-        }
-
-        if (TryGetComponent<Rigidbody2D>(out var rb))
-        {
-            rb.velocity = Vector2.zero;
-            rb.bodyType = RigidbodyType2D.Kinematic;
-        }
-
-        // Disable the roaming component
-        if (TryGetComponent<Skeleton_roaming>(out var roam))
-        {
-            roam.enabled = false;
-        }
+        m_animator.SetTrigger("Death");
     }
 
+    // Hide health bar UI on death
+    if (m_healthSlider != null)
+    {
+        m_healthSlider.gameObject.SetActive(false);
+    }
+
+    // Disable movement & physics interactions
+    if (TryGetComponent<Collider2D>(out var col))
+    {
+        col.enabled = false;
+    }
+
+    if (TryGetComponent<Rigidbody2D>(out var rb))
+    {
+        rb.velocity = Vector2.zero;
+        rb.bodyType = RigidbodyType2D.Kinematic;
+    }
+
+    // Disable the roaming component
+    if (TryGetComponent<Skeleton_roaming>(out var roam))
+    {
+        roam.enabled = false;
+    }
+
+    StartCoroutine(DestroyAfterAnimation());
+}
+
+private IEnumerator DestroyAfterAnimation()
+{
+    yield return null; // wait one frame for animator to transition
+    yield return new WaitForSeconds(m_animator.GetCurrentAnimatorStateInfo(0).length / m_animator.GetCurrentAnimatorStateInfo(0).speed);
+    Destroy(gameObject);
+}
     public override void Revive()
     {
         base.Revive();

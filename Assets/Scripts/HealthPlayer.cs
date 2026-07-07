@@ -72,4 +72,16 @@ public class HealthPlayer : Health
         m_animator.SetInteger("AnimState", 3);
         UpdateHealthGfx();
     }
+
+    public override void Heal(float amount)
+    {
+        base.Heal(amount);
+        UpdateHealthGfx();
+    }
+
+    public override void IncreaseMaxHealth(float amount)
+    {
+        base.IncreaseMaxHealth(amount);
+        UpdateHealthGfx();
+    }
 }
