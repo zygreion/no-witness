@@ -25,6 +25,13 @@ public class BringerOfDeath_Combat : MonoBehaviour
     [SerializeField] private float meleeOffsetX = 0f;
     [SerializeField] private float meleeOffsetY = 0f;
 
+    // Monster can has different height than player
+    // This variable adjust whenever monster chasing / attacking player
+    // Try set the value to 0f to see that tall monster
+    // Will chase player's foot instead player's body
+    [Header("Chase & Attack Pivot")]
+    [SerializeField] private float yPivotOffset = 0.0f;
+
     private Rigidbody2D rb;
     private Animator animator;
     private Vector3 originalScale;
@@ -60,7 +67,7 @@ public class BringerOfDeath_Combat : MonoBehaviour
             HealthPlayer playerHealth = playerTransform.GetComponent<HealthPlayer>();
             if (playerHealth != null && !playerHealth.IsDead)
             {
-                float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
+                float distanceToPlayer = Vector2.Distance(transform.position, GetPlayerTransformOffset());
 
                 if (distanceToPlayer <= chaseRange)
                 {
@@ -116,7 +123,7 @@ public class BringerOfDeath_Combat : MonoBehaviour
 
     private void MoveTowardPlayer()
     {
-        Vector2 direction = ((Vector2)playerTransform.position - (Vector2)transform.position).normalized;
+        Vector2 direction = ((Vector2)GetPlayerTransformOffset() - (Vector2)transform.position).normalized;
         rb.velocity = direction * moveSpeed;
         animator.SetBool("isWalking", true);
 
@@ -124,7 +131,9 @@ public class BringerOfDeath_Combat : MonoBehaviour
         {
             transform.localScale = new Vector3(-Mathf.Sign(direction.x) * originalScale.x, originalScale.y, originalScale.z);
 
-            Slider.Direction sliderDir = direction.x > 0 ? Slider.Direction.LeftToRight : Slider.Direction.RightToLeft;
+            // Main Boss' actual scale is negative (facing left)
+            // So we need to flip the value
+            Slider.Direction sliderDir = direction.x > 0 ? Slider.Direction.RightToLeft : Slider.Direction.LeftToRight;
             if (healthSlider != null)
                 healthSlider.SetDirection(sliderDir, false);
         }
@@ -202,7 +211,7 @@ public class BringerOfDeath_Combat : MonoBehaviour
     private void FacePlayer()
     {
         if (playerTransform == null) return;
-        Vector2 dir = ((Vector2)playerTransform.position - (Vector2)transform.position).normalized;
+        Vector2 dir = ((Vector2)GetPlayerTransformOffset() - (Vector2)transform.position).normalized;
         if (dir.x != 0)
             transform.localScale = new Vector3(-Mathf.Sign(dir.x) * originalScale.x, originalScale.y, originalScale.z);
     }
@@ -225,5 +234,13 @@ public class BringerOfDeath_Combat : MonoBehaviour
 
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere((Vector2)transform.position + new Vector2(facingDirection * meleeOffsetX, meleeOffsetY), meleeRange);
+    }
+
+    private Vector3 GetPlayerTransformOffset()
+    {
+        Vector3 playerPosOffset = playerTransform.position;
+        playerPosOffset.y += yPivotOffset;
+
+        return playerPosOffset;
     }
 }
