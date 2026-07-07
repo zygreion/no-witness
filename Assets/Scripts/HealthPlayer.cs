@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,22 +6,50 @@ using UnityEngine.UI;
 
 public class HealthPlayer : Health
 {
+    [Header("Player")]
     [SerializeField] private RawImage m_healthGfx;
-    private const float k_maxWidth = 200.0f;
+    [SerializeField] [Range(0f, 1f)] private float m_blockDamageMultiplier = 0.2f; // Takes 20% damage when blocking
+    
+    private RectTransform m_healthGfxTransform;
+    private float k_maxWidth;
+    private PlayerController m_playerController;
+
+    public static event Action OnPlayerDeath;
+
+    private void Start()
+    {
+        m_playerController = GetComponent<PlayerController>();
+
+        if (m_healthGfx == null) return;
+
+        m_healthGfxTransform = m_healthGfx.GetComponent<RectTransform>();
+        k_maxWidth = ((RectTransform)m_healthGfx.transform.parent).rect.width;
+    }
 
     private void UpdateHealthGfx()
     {
         if (m_healthGfx == null) return;
 
-        RectTransform rectTransform = m_healthGfx.GetComponent<RectTransform>();
         float newWidth = m_currentHealth / m_maxHealth * k_maxWidth;
-
-        rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, newWidth);
-        Debug.Log($"{gameObject.name}'s health: {m_currentHealth / m_maxHealth * 100:F0}%");
+        m_healthGfxTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, newWidth);
     }
 
     public override void TakeDamage(float dmgAmount)
     {
+        if (IsDead) return;
+
+        // Roll I-Frames (Invulnerability)
+        if (m_playerController != null && m_playerController.IsRolling)
+        {
+            return; // Ignore damage during roll
+        }
+
+        // Block Damage Mitigation
+        if (m_playerController != null && m_playerController.IsBlocking)
+        {
+            dmgAmount *= m_blockDamageMultiplier;
+        }
+
         base.TakeDamage(dmgAmount);
 
         if (m_currentHealth > 0)
@@ -31,6 +60,7 @@ public class HealthPlayer : Health
         {
             IsDead = true;
             m_animator.SetTrigger("Death");
+            OnPlayerDeath?.Invoke();
         }
 
         UpdateHealthGfx();
@@ -40,6 +70,18 @@ public class HealthPlayer : Health
     {
         base.Revive();
         m_animator.SetInteger("AnimState", 3);
+        UpdateHealthGfx();
+    }
+
+    public override void Heal(float amount)
+    {
+        base.Heal(amount);
+        UpdateHealthGfx();
+    }
+
+    public override void IncreaseMaxHealth(float amount)
+    {
+        base.IncreaseMaxHealth(amount);
         UpdateHealthGfx();
     }
 }

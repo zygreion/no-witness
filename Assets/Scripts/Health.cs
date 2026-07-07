@@ -6,7 +6,9 @@ using UnityEngine.UI;
 
 public class Health : MonoBehaviour
 {
-    [SerializeField] protected float m_maxHealth, m_currentHealth = 100.0f;
+    [Header("Base")]
+    [SerializeField] protected float m_maxHealth = 100.0f;
+    [SerializeField] protected float m_currentHealth = 100.0f;
     protected Animator m_animator;
     public bool IsDead { get; protected set; } = false;
 
@@ -25,4 +27,15 @@ public class Health : MonoBehaviour
         m_currentHealth = m_maxHealth;
         IsDead = false;
     }
+
+    public virtual void Heal(float amount)
+{
+    m_currentHealth = Mathf.Clamp(m_currentHealth + amount, 0, m_maxHealth);
+}
+
+public virtual void IncreaseMaxHealth(float amount)
+{
+    m_maxHealth += amount;
+    m_currentHealth = m_maxHealth;
+}
 }
